@@ -1,5 +1,13 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
-<title>Testimonials iPhone Test</title>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Testimonials iPhone Test</title>
+</head>
+<body>
+
 <style>
 /* ===== Site CSS, copied unchanged from the repository (main @ 8a847d1) ===== */
 /* =========================================================
@@ -602,26 +610,13 @@ ul {
 }
 
 
-/* ===== Test variants (A uses the site CSS above with nothing added) ===== */
-/* B and D: same edge fade, painted over the cards instead of masking them */
-.v-B .testimonials__ticker, .v-D .testimonials__ticker, .v-C .testimonials__ticker { -webkit-mask-image: none; mask-image: none; }
-.v-B .testimonials__ticker, .v-D .testimonials__ticker { position: relative; }
-.v-B .testimonials__ticker::before, .v-B .testimonials__ticker::after,
-.v-D .testimonials__ticker::before, .v-D .testimonials__ticker::after {
-  content: ""; position: absolute; top: 0; bottom: 0; z-index: 1; width: 6%; pointer-events: none;
-}
-.v-B .testimonials__ticker::before, .v-D .testimonials__ticker::before { left: 0; background: linear-gradient(90deg, var(--color-black), transparent); }
-.v-B .testimonials__ticker::after, .v-D .testimonials__ticker::after { right: 0; background: linear-gradient(270deg, var(--color-black), transparent); }
-/* D: each list moves by its own width instead of the whole track by half */
-.v-D .testimonials__track { animation: none; }
-.v-D .testimonials__list { animation: tt-list var(--t-duration) linear infinite; }
-.v-D .testimonials__ticker.is-paused .testimonials__list { animation-play-state: paused; }
-@media (hover: hover) and (pointer: fine) { .v-D .testimonials__ticker:hover .testimonials__list { animation-play-state: paused; } }
-@keyframes tt-list { from { transform: translate3d(0,0,0); } to { transform: translate3d(-100%,0,0); } }
+/* ===== B: the proposed fix (A uses the site CSS above with nothing added) =====
+   Safari sizes each set from its cards' natural content width and ignores their
+   flex size, which leaves a large empty gap after every set. A plain width makes
+   Safari measure each card at its real size. */
+.v-B .testimonials__list > li { width: var(--t-card); }
 @media (prefers-reduced-motion: reduce) {
-  .v-B .testimonials__ticker::before, .v-B .testimonials__ticker::after,
-  .v-D .testimonials__ticker::before, .v-D .testimonials__ticker::after { display: none; }
-  .v-D .testimonials__list { animation: none; }
+  .v-B .testimonials__list > li { width: auto; } /* the still grid sizes cards itself */
 }
 
 /* ===== Test controls (site tokens) ===== */
@@ -629,7 +624,6 @@ ul {
 .lab { padding-block: 1.25rem 0.5rem; }
 .lab__eyebrow { margin: 0 0 0.35rem; font-size: 0.75rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-rose); }
 .lab h1 { margin: 0; font-size: clamp(1.5rem, 1.2rem + 1.5vw, 2rem); line-height: 1.2; text-wrap: balance; }
-.lab p { margin: 0.6rem 0 0; max-width: 62ch; color: var(--text-secondary); line-height: 1.55; }
 .lab__steps { margin: 0.75rem 0 0; padding-left: 1.2rem; color: var(--text-secondary); line-height: 1.55; max-width: 62ch; }
 .lab__steps li + li { margin-top: 0.3rem; }
 .lab__row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
@@ -640,28 +634,31 @@ ul {
 .lab__variant { margin-top: 0.9rem; padding: 0.85rem 1rem; border: 1px solid rgba(255,137,141,0.18); border-radius: 14px; background: var(--color-charcoal); }
 .lab__variant strong { display: block; font-size: 1.05rem; }
 .lab__variant span { display: block; margin-top: 0.2rem; color: var(--text-secondary); font-size: 0.95rem; }
-.lab__readout { margin-top: 0.75rem; font-variant-numeric: tabular-nums; font-size: 0.95rem; color: var(--text-primary); }
+.lab__check { margin-top: 0.75rem; padding: 0.6rem 0.85rem; border-radius: 10px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.lab__check.is-ok { background: rgba(74, 222, 128, 0.12); color: #86efac; }
+.lab__check.is-bad { background: rgba(255, 137, 141, 0.14); color: var(--color-rose-light); }
+.lab__readout { margin-top: 0.5rem; font-variant-numeric: tabular-nums; font-size: 0.95rem; color: var(--text-primary); }
 .lab__readout b { color: var(--color-rose); }
 .lab__device { margin-top: 1.5rem; padding-bottom: 2rem; font-size: 0.8rem; color: var(--text-muted); overflow-wrap: anywhere; }
 </style>
 
 <div class="container lab">
-  <p class="lab__eyebrow">ASR Design Space · ticker test</p>
-  <h1>Does the testimonials loop keep going on this iPhone?</h1>
+  <p class="lab__eyebrow">ASR Design Space · ticker test 2</p>
+  <h1>Does the copy follow straight after the first set?</h1>
   <ol class="lab__steps">
-    <li>Pick a version. Tap <b>Fast</b> so one full set passes in about 10 seconds.</li>
-    <li>Watch the cards for at least 30 seconds (three or more loops).</li>
-    <li>Note whether cards keep coming, or the strip goes blank or freezes. The readout below shows whether the animation itself is still running.</li>
+    <li>Open <b>A</b>. The green or red box shows Safari's measured width of one set, compared with its four cards.</li>
+    <li>Open <b>B</b> (the fix), tap <b>Fast</b>, and watch for 30 seconds. Cards should keep coming with no blank stretch.</li>
   </ol>
   <div class="lab__row" role="group" aria-label="Version">
-    <button class="lab__btn" type="button" data-pick="A" aria-pressed="true">A</button><button class="lab__btn" type="button" data-pick="B" aria-pressed="false">B</button><button class="lab__btn" type="button" data-pick="C" aria-pressed="false">C</button><button class="lab__btn" type="button" data-pick="D" aria-pressed="false">D</button>
+    <button class="lab__btn" type="button" data-pick="A" aria-pressed="true">A · Live site, unchanged</button><button class="lab__btn" type="button" data-pick="B" aria-pressed="false">B · Fixed</button>
   </div>
   <div class="lab__row" role="group" aria-label="Speed">
     <button class="lab__btn" type="button" data-speed="1" aria-pressed="true">Normal speed</button>
     <button class="lab__btn" type="button" data-speed="4" aria-pressed="false">Fast (4×)</button>
   </div>
   <div class="lab__variant"><strong id="v-name"></strong><span id="v-desc"></span></div>
-  <p class="lab__readout" id="readout" aria-live="off">Starting…</p>
+  <p class="lab__check" id="check"></p>
+  <p class="lab__readout" id="readout">Starting…</p>
 </div>
 
 <section data-variant="A" class="testimonials v-A" id="testimonials-A" aria-labelledby="testimonials-title-A">
@@ -946,288 +943,6 @@ ul {
           </div>
         </div>
       </div>
-    </section><section data-variant="C" class="testimonials v-C" hidden id="testimonials-C" aria-labelledby="testimonials-title-C">
-      <div class="container">
-        <header class="testimonials__header">
-          <div>
-            <p class="section-eyebrow">Testimonials</p>
-            <h2 class="section-title section-title--rule" id="testimonials-title-C">What Clients Say</h2>
-            <p class="section-lead">Kind words from clients I've had the pleasure to work with.</p>
-          </div>
-          <!-- Pause / play for the moving testimonials (shown by js/ticker.js) -->
-          <button class="ticker-pause" type="button" aria-pressed="false" aria-controls="testimonials-ticker-C" data-ticker-pause hidden>
-            <span class="visually-hidden">Pause the testimonials animation</span>
-            <svg class="icon-pause" viewBox="0 0 20 20" aria-hidden="true"><path d="M7 5v10M13 5v10" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
-            <svg class="icon-play" viewBox="0 0 20 20" aria-hidden="true"><path d="M7 5.5v9l7.5-4.5z" fill="currentColor"/></svg>
-          </button>
-        </header>
-
-        <!-- Testimonials ticker (moves right to left). The cards appear twice so the
-             loop is seamless; the second set is hidden from screen readers.
-             To add a testimonial, add it to BOTH lists (in the copy: aria-hidden="true" on the <li>, alt="").
-             Speed: data-ticker-speed = pixels per second (same on every screen size). -->
-        <div class="testimonials__ticker" id="testimonials-ticker-C" data-ticker data-ticker-speed="34">
-          <div class="testimonials__track">
-            <ul class="testimonials__list">
-            <li>
-              <figure class="testimonial">
-                <img class="testimonial__photo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Crect width='96' height='96' fill='%23a05259'/%3E%3Ccircle cx='48' cy='38' r='17' fill='%23ffe4e4'/%3E%3Cpath d='M16 96c4-22 18-32 32-32s28 10 32 32z' fill='%23ffe4e4'/%3E%3C/svg%3E" alt="Portrait of Hassan J." width="96" height="96" decoding="async">
-                <div class="testimonial__body">
-                  <blockquote class="testimonial__quote">
-                    <p>“Ayisha is the best! ASR Designs brought our vision to life with ease and creativity. Highly recommended!”</p>
-                  </blockquote>
-                  <figcaption class="testimonial__author">
-                    <span class="testimonial__name">Hassan J.</span>
-                    <span class="testimonial__role">Perfect Designs</span>
-                  </figcaption>
-                </div>
-              </figure>
-            </li>
-            <li>
-              <figure class="testimonial">
-                <img class="testimonial__photo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Crect width='96' height='96' fill='%23a05259'/%3E%3Ccircle cx='48' cy='38' r='17' fill='%23ffe4e4'/%3E%3Cpath d='M16 96c4-22 18-32 32-32s28 10 32 32z' fill='%23ffe4e4'/%3E%3C/svg%3E" alt="Portrait of Sarah Ahmed" width="96" height="96" decoding="async">
-                <div class="testimonial__body">
-                  <blockquote class="testimonial__quote">
-                    <p>“Ayisha redesigned our website beautifully, making it seamless and user-friendly. Her work is truly commendable!”</p>
-                  </blockquote>
-                  <figcaption class="testimonial__author">
-                    <span class="testimonial__name">Sarah Ahmed</span>
-                    <span class="testimonial__role">Masjid Ur-Rahman</span>
-                  </figcaption>
-                </div>
-              </figure>
-            </li>
-            <li>
-              <figure class="testimonial">
-                <img class="testimonial__photo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Crect width='96' height='96' fill='%23a05259'/%3E%3Ccircle cx='48' cy='38' r='17' fill='%23ffe4e4'/%3E%3Cpath d='M16 96c4-22 18-32 32-32s28 10 32 32z' fill='%23ffe4e4'/%3E%3C/svg%3E" alt="Portrait of Michael T." width="96" height="96" decoding="async">
-                <div class="testimonial__body">
-                  <blockquote class="testimonial__quote">
-                    <p>“Ayisha created a strong brand identity that perfectly reflects our vision. Her attention to detail is truly impressive!”</p>
-                  </blockquote>
-                  <figcaption class="testimonial__author">
-                    <span class="testimonial__name">Michael T.</span>
-                    <span class="testimonial__role">EcoSphere</span>
-                  </figcaption>
-                </div>
-              </figure>
-            </li>
-            <li>
-              <figure class="testimonial">
-                <img class="testimonial__photo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Crect width='96' height='96' fill='%23a05259'/%3E%3Ccircle cx='48' cy='38' r='17' fill='%23ffe4e4'/%3E%3Cpath d='M16 96c4-22 18-32 32-32s28 10 32 32z' fill='%23ffe4e4'/%3E%3C/svg%3E" alt="Portrait of Emily R." width="96" height="96" decoding="async">
-                <div class="testimonial__body">
-                  <blockquote class="testimonial__quote">
-                    <p>“Ayisha built a stunning, high-performing website that exceeded our expectations. Her front-end skills are outstanding!”</p>
-                  </blockquote>
-                  <figcaption class="testimonial__author">
-                    <span class="testimonial__name">Emily R.</span>
-                    <span class="testimonial__role">Bytes &amp; Beyond</span>
-                  </figcaption>
-                </div>
-              </figure>
-            </li>
-            </ul>
-            <ul class="testimonials__list testimonials__list--copy" aria-hidden="true">
-            <li aria-hidden="true">
-              <figure class="testimonial">
-                <img class="testimonial__photo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Crect width='96' height='96' fill='%23a05259'/%3E%3Ccircle cx='48' cy='38' r='17' fill='%23ffe4e4'/%3E%3Cpath d='M16 96c4-22 18-32 32-32s28 10 32 32z' fill='%23ffe4e4'/%3E%3C/svg%3E" alt="" width="96" height="96" decoding="async">
-                <div class="testimonial__body">
-                  <blockquote class="testimonial__quote">
-                    <p>“Ayisha is the best! ASR Designs brought our vision to life with ease and creativity. Highly recommended!”</p>
-                  </blockquote>
-                  <figcaption class="testimonial__author">
-                    <span class="testimonial__name">Hassan J.</span>
-                    <span class="testimonial__role">Perfect Designs</span>
-                  </figcaption>
-                </div>
-              </figure>
-            </li>
-            <li aria-hidden="true">
-              <figure class="testimonial">
-                <img class="testimonial__photo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Crect width='96' height='96' fill='%23a05259'/%3E%3Ccircle cx='48' cy='38' r='17' fill='%23ffe4e4'/%3E%3Cpath d='M16 96c4-22 18-32 32-32s28 10 32 32z' fill='%23ffe4e4'/%3E%3C/svg%3E" alt="" width="96" height="96" decoding="async">
-                <div class="testimonial__body">
-                  <blockquote class="testimonial__quote">
-                    <p>“Ayisha redesigned our website beautifully, making it seamless and user-friendly. Her work is truly commendable!”</p>
-                  </blockquote>
-                  <figcaption class="testimonial__author">
-                    <span class="testimonial__name">Sarah Ahmed</span>
-                    <span class="testimonial__role">Masjid Ur-Rahman</span>
-                  </figcaption>
-                </div>
-              </figure>
-            </li>
-            <li aria-hidden="true">
-              <figure class="testimonial">
-                <img class="testimonial__photo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Crect width='96' height='96' fill='%23a05259'/%3E%3Ccircle cx='48' cy='38' r='17' fill='%23ffe4e4'/%3E%3Cpath d='M16 96c4-22 18-32 32-32s28 10 32 32z' fill='%23ffe4e4'/%3E%3C/svg%3E" alt="" width="96" height="96" decoding="async">
-                <div class="testimonial__body">
-                  <blockquote class="testimonial__quote">
-                    <p>“Ayisha created a strong brand identity that perfectly reflects our vision. Her attention to detail is truly impressive!”</p>
-                  </blockquote>
-                  <figcaption class="testimonial__author">
-                    <span class="testimonial__name">Michael T.</span>
-                    <span class="testimonial__role">EcoSphere</span>
-                  </figcaption>
-                </div>
-              </figure>
-            </li>
-            <li aria-hidden="true">
-              <figure class="testimonial">
-                <img class="testimonial__photo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Crect width='96' height='96' fill='%23a05259'/%3E%3Ccircle cx='48' cy='38' r='17' fill='%23ffe4e4'/%3E%3Cpath d='M16 96c4-22 18-32 32-32s28 10 32 32z' fill='%23ffe4e4'/%3E%3C/svg%3E" alt="" width="96" height="96" decoding="async">
-                <div class="testimonial__body">
-                  <blockquote class="testimonial__quote">
-                    <p>“Ayisha built a stunning, high-performing website that exceeded our expectations. Her front-end skills are outstanding!”</p>
-                  </blockquote>
-                  <figcaption class="testimonial__author">
-                    <span class="testimonial__name">Emily R.</span>
-                    <span class="testimonial__role">Bytes &amp; Beyond</span>
-                  </figcaption>
-                </div>
-              </figure>
-            </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section><section data-variant="D" class="testimonials v-D" hidden id="testimonials-D" aria-labelledby="testimonials-title-D">
-      <div class="container">
-        <header class="testimonials__header">
-          <div>
-            <p class="section-eyebrow">Testimonials</p>
-            <h2 class="section-title section-title--rule" id="testimonials-title-D">What Clients Say</h2>
-            <p class="section-lead">Kind words from clients I've had the pleasure to work with.</p>
-          </div>
-          <!-- Pause / play for the moving testimonials (shown by js/ticker.js) -->
-          <button class="ticker-pause" type="button" aria-pressed="false" aria-controls="testimonials-ticker-D" data-ticker-pause hidden>
-            <span class="visually-hidden">Pause the testimonials animation</span>
-            <svg class="icon-pause" viewBox="0 0 20 20" aria-hidden="true"><path d="M7 5v10M13 5v10" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
-            <svg class="icon-play" viewBox="0 0 20 20" aria-hidden="true"><path d="M7 5.5v9l7.5-4.5z" fill="currentColor"/></svg>
-          </button>
-        </header>
-
-        <!-- Testimonials ticker (moves right to left). The cards appear twice so the
-             loop is seamless; the second set is hidden from screen readers.
-             To add a testimonial, add it to BOTH lists (in the copy: aria-hidden="true" on the <li>, alt="").
-             Speed: data-ticker-speed = pixels per second (same on every screen size). -->
-        <div class="testimonials__ticker" id="testimonials-ticker-D" data-ticker data-ticker-speed="34">
-          <div class="testimonials__track">
-            <ul class="testimonials__list">
-            <li>
-              <figure class="testimonial">
-                <img class="testimonial__photo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Crect width='96' height='96' fill='%23a05259'/%3E%3Ccircle cx='48' cy='38' r='17' fill='%23ffe4e4'/%3E%3Cpath d='M16 96c4-22 18-32 32-32s28 10 32 32z' fill='%23ffe4e4'/%3E%3C/svg%3E" alt="Portrait of Hassan J." width="96" height="96" decoding="async">
-                <div class="testimonial__body">
-                  <blockquote class="testimonial__quote">
-                    <p>“Ayisha is the best! ASR Designs brought our vision to life with ease and creativity. Highly recommended!”</p>
-                  </blockquote>
-                  <figcaption class="testimonial__author">
-                    <span class="testimonial__name">Hassan J.</span>
-                    <span class="testimonial__role">Perfect Designs</span>
-                  </figcaption>
-                </div>
-              </figure>
-            </li>
-            <li>
-              <figure class="testimonial">
-                <img class="testimonial__photo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Crect width='96' height='96' fill='%23a05259'/%3E%3Ccircle cx='48' cy='38' r='17' fill='%23ffe4e4'/%3E%3Cpath d='M16 96c4-22 18-32 32-32s28 10 32 32z' fill='%23ffe4e4'/%3E%3C/svg%3E" alt="Portrait of Sarah Ahmed" width="96" height="96" decoding="async">
-                <div class="testimonial__body">
-                  <blockquote class="testimonial__quote">
-                    <p>“Ayisha redesigned our website beautifully, making it seamless and user-friendly. Her work is truly commendable!”</p>
-                  </blockquote>
-                  <figcaption class="testimonial__author">
-                    <span class="testimonial__name">Sarah Ahmed</span>
-                    <span class="testimonial__role">Masjid Ur-Rahman</span>
-                  </figcaption>
-                </div>
-              </figure>
-            </li>
-            <li>
-              <figure class="testimonial">
-                <img class="testimonial__photo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Crect width='96' height='96' fill='%23a05259'/%3E%3Ccircle cx='48' cy='38' r='17' fill='%23ffe4e4'/%3E%3Cpath d='M16 96c4-22 18-32 32-32s28 10 32 32z' fill='%23ffe4e4'/%3E%3C/svg%3E" alt="Portrait of Michael T." width="96" height="96" decoding="async">
-                <div class="testimonial__body">
-                  <blockquote class="testimonial__quote">
-                    <p>“Ayisha created a strong brand identity that perfectly reflects our vision. Her attention to detail is truly impressive!”</p>
-                  </blockquote>
-                  <figcaption class="testimonial__author">
-                    <span class="testimonial__name">Michael T.</span>
-                    <span class="testimonial__role">EcoSphere</span>
-                  </figcaption>
-                </div>
-              </figure>
-            </li>
-            <li>
-              <figure class="testimonial">
-                <img class="testimonial__photo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Crect width='96' height='96' fill='%23a05259'/%3E%3Ccircle cx='48' cy='38' r='17' fill='%23ffe4e4'/%3E%3Cpath d='M16 96c4-22 18-32 32-32s28 10 32 32z' fill='%23ffe4e4'/%3E%3C/svg%3E" alt="Portrait of Emily R." width="96" height="96" decoding="async">
-                <div class="testimonial__body">
-                  <blockquote class="testimonial__quote">
-                    <p>“Ayisha built a stunning, high-performing website that exceeded our expectations. Her front-end skills are outstanding!”</p>
-                  </blockquote>
-                  <figcaption class="testimonial__author">
-                    <span class="testimonial__name">Emily R.</span>
-                    <span class="testimonial__role">Bytes &amp; Beyond</span>
-                  </figcaption>
-                </div>
-              </figure>
-            </li>
-            </ul>
-            <ul class="testimonials__list testimonials__list--copy" aria-hidden="true">
-            <li aria-hidden="true">
-              <figure class="testimonial">
-                <img class="testimonial__photo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Crect width='96' height='96' fill='%23a05259'/%3E%3Ccircle cx='48' cy='38' r='17' fill='%23ffe4e4'/%3E%3Cpath d='M16 96c4-22 18-32 32-32s28 10 32 32z' fill='%23ffe4e4'/%3E%3C/svg%3E" alt="" width="96" height="96" decoding="async">
-                <div class="testimonial__body">
-                  <blockquote class="testimonial__quote">
-                    <p>“Ayisha is the best! ASR Designs brought our vision to life with ease and creativity. Highly recommended!”</p>
-                  </blockquote>
-                  <figcaption class="testimonial__author">
-                    <span class="testimonial__name">Hassan J.</span>
-                    <span class="testimonial__role">Perfect Designs</span>
-                  </figcaption>
-                </div>
-              </figure>
-            </li>
-            <li aria-hidden="true">
-              <figure class="testimonial">
-                <img class="testimonial__photo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Crect width='96' height='96' fill='%23a05259'/%3E%3Ccircle cx='48' cy='38' r='17' fill='%23ffe4e4'/%3E%3Cpath d='M16 96c4-22 18-32 32-32s28 10 32 32z' fill='%23ffe4e4'/%3E%3C/svg%3E" alt="" width="96" height="96" decoding="async">
-                <div class="testimonial__body">
-                  <blockquote class="testimonial__quote">
-                    <p>“Ayisha redesigned our website beautifully, making it seamless and user-friendly. Her work is truly commendable!”</p>
-                  </blockquote>
-                  <figcaption class="testimonial__author">
-                    <span class="testimonial__name">Sarah Ahmed</span>
-                    <span class="testimonial__role">Masjid Ur-Rahman</span>
-                  </figcaption>
-                </div>
-              </figure>
-            </li>
-            <li aria-hidden="true">
-              <figure class="testimonial">
-                <img class="testimonial__photo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Crect width='96' height='96' fill='%23a05259'/%3E%3Ccircle cx='48' cy='38' r='17' fill='%23ffe4e4'/%3E%3Cpath d='M16 96c4-22 18-32 32-32s28 10 32 32z' fill='%23ffe4e4'/%3E%3C/svg%3E" alt="" width="96" height="96" decoding="async">
-                <div class="testimonial__body">
-                  <blockquote class="testimonial__quote">
-                    <p>“Ayisha created a strong brand identity that perfectly reflects our vision. Her attention to detail is truly impressive!”</p>
-                  </blockquote>
-                  <figcaption class="testimonial__author">
-                    <span class="testimonial__name">Michael T.</span>
-                    <span class="testimonial__role">EcoSphere</span>
-                  </figcaption>
-                </div>
-              </figure>
-            </li>
-            <li aria-hidden="true">
-              <figure class="testimonial">
-                <img class="testimonial__photo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Crect width='96' height='96' fill='%23a05259'/%3E%3Ccircle cx='48' cy='38' r='17' fill='%23ffe4e4'/%3E%3Cpath d='M16 96c4-22 18-32 32-32s28 10 32 32z' fill='%23ffe4e4'/%3E%3C/svg%3E" alt="" width="96" height="96" decoding="async">
-                <div class="testimonial__body">
-                  <blockquote class="testimonial__quote">
-                    <p>“Ayisha built a stunning, high-performing website that exceeded our expectations. Her front-end skills are outstanding!”</p>
-                  </blockquote>
-                  <figcaption class="testimonial__author">
-                    <span class="testimonial__name">Emily R.</span>
-                    <span class="testimonial__role">Bytes &amp; Beyond</span>
-                  </figcaption>
-                </div>
-              </figure>
-            </li>
-            </ul>
-          </div>
-        </div>
-      </div>
     </section>
 
 <div class="container"><p class="lab__device" id="device"></p></div>
@@ -1292,13 +1007,17 @@ ul {
 <script>
 /* ===== Test controls ===== */
 (function () {
-  var V = { A: ["Live site, unchanged", "Exactly what asrdesignspace.com runs today."], B: ["Fix 1: edge fade without a mask", "Same look. The soft edges are drawn on top of the cards instead of masking them."], C: ["Control: no edge fade", "Live version with the edge fade removed completely. Only used to pin down the cause."], D: ["Fix 2: each set moves on its own", "Fix 1, plus the original and the copy each animate separately (smaller moving layers)."] };
+  var V = { A: ["Live site, unchanged", "Exactly what asrdesignspace.com runs today."], B: ["Fixed: one CSS rule added", "Each card also gets width: var(--t-card), so Safari measures a set by its four cards."] };
   var current = "A", factor = 1;
-  function section() { return document.querySelector('[data-variant="' + current + '"]'); }
-  function ticker() { return section().querySelector(".testimonials__ticker"); }
+  function ticker() { return document.querySelector('[data-variant="' + current + '"] .testimonials__ticker'); }
+  function measure() {
+    var t = ticker(), lists = t.querySelectorAll("ul"), cards = lists[0].querySelectorAll(":scope > li");
+    var gap = parseFloat(getComputedStyle(lists[0]).columnGap) || 0, sum = 0;
+    cards.forEach(function (li) { sum += li.getBoundingClientRect().width + gap; });
+    return { set: lists[0].getBoundingClientRect().width, cards: sum, copyAt: lists[1].getBoundingClientRect().left - lists[0].getBoundingClientRect().left };
+  }
   function applySpeed() {
-    var t = ticker(), list = t.querySelector("ul"), speed = parseFloat(t.getAttribute("data-ticker-speed")) || 34;
-    var w = list.getBoundingClientRect().width;
+    var t = ticker(), speed = parseFloat(t.getAttribute("data-ticker-speed")) || 34, w = measure().set;
     if (w > 0) t.style.setProperty("--t-duration", (w / (speed * factor)).toFixed(2) + "s");
   }
   function show(key) {
@@ -1317,21 +1036,23 @@ ul {
       applySpeed();
     });
   });
-  function readout() {
-    var t = ticker(), track = t.firstElementChild, list = t.querySelector("ul");
-    var a = (current === "D" ? list : track).getAnimations ? (current === "D" ? list : track).getAnimations()[0] : null;
-    var out = document.getElementById("readout");
+  function update() {
+    var m = measure(), gapPx = m.set - m.cards, check = document.getElementById("check");
+    var ok = Math.abs(gapPx) < 1;
+    check.className = "lab__check " + (ok ? "is-ok" : "is-bad");
+    check.textContent = (ok ? "✓ " : "✗ ") + "One set measures " + Math.round(m.set) + " px; its four cards and gaps take " + Math.round(m.cards) + " px. " +
+      (ok ? "The copy starts right after the last card." : Math.round(gapPx) + " px of empty space before the copy arrives.");
+    var track = ticker().firstElementChild, a = track.getAnimations ? track.getAnimations()[0] : null, out = document.getElementById("readout");
     if (!a) { out.textContent = "No animation running (Reduce Motion may be on)."; return; }
     var dur = a.effect.getComputedTiming().duration, ct = Number(a.currentTime) || 0;
-    var moved = t.getBoundingClientRect().left - (current === "D" ? list : track).getBoundingClientRect().left;
-    out.innerHTML = "Loop <b>" + (Math.floor(ct / dur) + 1) + "</b> · " + a.playState +
-      " · " + (ct % dur / dur * 100).toFixed(0) + "% through this loop · strip moved " + Math.round(moved) + " px of " + Math.round(list.getBoundingClientRect().width) +
-      " · " + (dur / 1000).toFixed(1) + " s per loop";
+    out.innerHTML = "Loop <b>" + (Math.floor(ct / dur) + 1) + "</b> · " + a.playState + " · " + (ct % dur / dur * 100).toFixed(0) +
+      "% through this loop · " + (dur / 1000).toFixed(1) + " s per loop";
   }
-  setInterval(readout, 250);
+  setInterval(update, 250);
   document.getElementById("device").textContent = "Device: " + navigator.userAgent + " · screen " + innerWidth + " px wide at " + devicePixelRatio + "× · reduce motion " + (matchMedia("(prefers-reduced-motion: reduce)").matches ? "ON" : "off");
   show("A");
 })();
 </script>
 
-</body></html>
+</body>
+</html>
